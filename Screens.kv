@@ -1,0 +1,117 @@
+
+WindowManager:
+
+    HomeWindow:
+    WorkoutWindow:
+    ExercisesWindow:
+    HistoryWindow:
+    WorkoutHistoryWindow:
+    ExerciseSession:
+
+<HomeWindow>:
+    name: 'home'
+
+    MDRectangleFlatButton:
+        text: 'Start Workout'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        on_press: 
+            app.root.current = 'workout'
+            root.manager.transition.direction = "left"
+
+    MDRectangleFlatButton:
+        text: 'Workout History'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+        on_press: 
+            app.root.current = 'history'
+            root.manager.transition.direction = "left"
+
+<WorkoutWindow>:
+    name: 'workout'
+
+    MDRectangleFlatButton:
+        text: 'Back'
+        pos_hint: {'center_x': 0.8, 'center_y': 0.9}
+        on_press: 
+            app.root.current = 'home'
+            root.manager.transition.direction = 'right'
+
+    MDRectangleFlatButton:
+        text: 'New Exercise'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        on_press:
+            app.root.current = 'exercise_session'
+            root.manager.transition.direction = 'left'
+
+<ExerciseSession>:
+    name: 'exercise_session'
+
+    MDRectangleFlatButton:
+        text: 'Back'
+        pos_hint: {'center_x': 0.8, 'center_y': 0.9}
+        on_press: 
+            app.root.current = 'workout'
+            root.manager.transition.direction = 'right'
+
+    MDTextField:
+        hint_text: 'Exercise'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        size_hint_x: None
+        width: 300
+
+    MDTextField:
+        hint_text: 'Reps: '
+        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+        size_hint_x: None
+        width: 300
+    
+    MDTextField:
+        hint_text: 'Weight: '
+        pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+        size_hint_x: None
+        width: 300
+
+<HistoryWindow>:
+    name: 'history'
+
+    MDRectangleFlatButton:
+        text: 'Back'
+        pos_hint: {'center_x': 0.8, 'center_y': 0.9}
+        on_press: 
+            app.root.current = 'home'
+            root.manager.transition.direction = 'right'
+
+    MDRectangleFlatButton:
+        text: 'Previous Workouts'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        on_press: 
+            app.root.current = 'workout_history'
+            root.manager.transition.direction = 'left'
+    
+    MDRectangleFlatButton:
+        text: 'Exercises'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+        on_press: 
+            app.root.current = 'exercises'
+            root.manager.transition.direction = 'left'
+
+<WorkoutHistoryWindow>:
+    name: 'workout_history'
+
+    MDRectangleFlatButton:
+        text: 'Back'
+        pos_hint: {'center_x': 0.8, 'center_y': 0.9}
+        on_press: 
+            app.root.current = 'history'
+            root.manager.transition.direction = 'right'
+
+<ExercisesWindow>:
+    name: 'exercises'
+
+    MDRectangleFlatButton:
+        text: 'Back'
+        pos_hint: {'center_x': 0.8, 'center_y': 0.9}
+        on_press: 
+            app.root.current = 'history'
+            root.manager.transition.direction = 'right'
+
+
