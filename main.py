@@ -5,6 +5,7 @@ from kivymd.uix.screen import Screen
 from kivymd.uix.button import MDFloatingActionButton, MDRectangleFlatButton
 from kivymd.uix.list import MDList, OneLineListItem
 from kivymd.uix.screenmanager import ScreenManager
+from Session import Workout, Set, Exercise, ExerciseSession
 ScreenManager   
 import pickle
 import os
@@ -38,6 +39,13 @@ class WorkoutWindow(Screen):
     
     def __init__(self, **kw):
         super().__init__(**kw)
+        self.workout = Workout()
+        
+    def add_session(self):
+        pass
+    
+    def remove_session(self):
+        pass
         
 class ExerciseSession(Screen):
     pass
@@ -68,7 +76,6 @@ class WorkoutHistoryWindow(Screen):
 class WindowManager(ScreenManager):
     screen_mngr = ObjectProperty(None)
     
-
 class App(MDApp):
 
     def build(self, name = 'FitnessTracker'):
