@@ -1,4 +1,5 @@
 import pickle
+from datetime import datetime, date
 
 class Exercise():
 
@@ -23,7 +24,7 @@ class Exercise():
 
 class ExerciseSession():
 
-    """_
+    """
         Summarizes all work on one spesific exersice during a workout. Consists of a list of Set. 
     """
 
@@ -45,23 +46,31 @@ class Workout():
 
     def __init__(self):
         self.workout = {}
-        self.date = 2       #Set date
+        self.date = datetime.now().strftime('%B %d, %Y - %H:%M')     #Set date
 
     def add_exercise(self, session: ExerciseSession):
         self.workout[session.name] = session
 
     def save(self):
-        file_path = 'Data/Workouts' + self.name
+        file_path = 'Data/Workouts'
+        workouts = self.load_workouts()
+        print(workouts)
+        workouts.append(self)
         with open(file_path, 'wb') as outp:  # Overwrites any existing file.
-            pickle.dump(self, outp, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(workouts, outp, pickle.HIGHEST_PROTOCOL)
 
-
+    def load_workouts(self):
+        with open('Data/Workouts', 'rb') as outp:
+            try:
+                return pickle.load(outp)
+            except:
+                return []
 class Set():
 
     """
         Representation of a single set of an exercise. 
     """
 
-    def __init__(self, reps, weight = None):
+    def __init__(self, reps, weight):
         self.reps = reps
-        self.weight = 'NO WEIGHT' if weight == None else weight
+        self.weight = 'NO WEIGHT' if weight == '' else weight
