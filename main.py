@@ -8,7 +8,7 @@ from kivymd.uix.button import MDFloatingActionButton, MDRectangleFlatButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.list import MDList, OneLineListItem
 from kivymd.uix.screenmanager import ScreenManager
-from Session import Workout, Set, Exercise, ExerciseSession
+from Modules import Workout, Set, Exercise, ExerciseSession
 ScreenManager   
 import pickle
 import os
