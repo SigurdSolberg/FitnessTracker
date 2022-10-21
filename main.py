@@ -233,3 +233,7 @@ class App(MDApp):
     def history_btn(self, obj):
         print('You pressed the Workout History-button')
         pass
+  
+if __name__ == '__main__':  
+    app = App()
+    app.run()
