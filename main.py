@@ -1,4 +1,5 @@
 from gettext import translation
+from functools import partial
 from msilib.schema import Directory
 from kivy.uix.floatlayout import FloatLayout
 from kivymd.app import Builder, MDApp, ObjectProperty
@@ -12,6 +13,26 @@ from Modules import Workout, Set, Exercise, ExerciseSession
 ScreenManager   
 import pickle
 import os
+
+class ShowWorkoutWindow(Screen):
+    
+    def __init__(self, **kw):
+        super().__init__(**kw)
+        
+    def load_workout(self):
+        try:
+            self.remove_widget(self.session_list)
+        except:
+            pass
+        self.session_list = MDList()
+        for exercise, session in self.manager.buffer_workout.workout.items():
+            self.session_list.add_widget(OneLineListItem(text = f'{exercise}: {len(session.sets)} sets'))
+        self.add_widget(self.session_list)
+
+class ShowExerciseWindow(Screen):
+    
+    def __init__(self, **kw):
+        super().__init__(**kw)
 
 class HistoryWindow(Screen):
     
@@ -46,14 +67,14 @@ class ExercisesWindow(Screen):
             self.remove_widget(self.exercisesList)
         except:
             pass
-        self.exercises = [self.load_exercise(name) for name in os.listdir('Data/Exercises')]
+        self.exercises = [self.load_exercise(name) for name in os.listdir('Data/Exercises/')]
         exercisesList = MDList(pos_hint = {'center_x': 0.5, 'center_y':0.75})
         for i in self.exercises:
-            exercisesList.add_widget(OneLineListItem(text = i.name))
+            exercisesList.add_widget(OneLineListItem(text = i[0].name))
         self.add_widget(exercisesList)
         
     def load_exercise(self, name):
-        with open('Data/' + name, 'rb') as outp:
+        with open('Data/Exercises/' + name, 'rb') as outp:
             try: 
                 return pickle.load(outp)    
             except:
@@ -85,9 +106,10 @@ class WorkoutWindow(Screen):
          
     def add_session(self):
         exercise_session = self.manager.buffer_session
-        self.workout.add_exercise(exercise_session)
-        self.workout_list.add_widget(OneLineListItem(text = f'{exercise_session.name}: {len(exercise_session.sets)} sets.'))
-        print('Adding new session to the current workout')
+        if type(exercise_session) == ExerciseSession:
+            self.workout.add_exercise(exercise_session)
+            self.workout_list.add_widget(OneLineListItem(text = f'{exercise_session.name}: {len(exercise_session.sets)} sets'))
+            print('Adding new session to the current workout')
     
     def back(self, _):
         self.manager.current = 'home'
@@ -180,13 +202,22 @@ class WorkoutHistoryWindow(Screen):
         
         self.list = MDList()
         for i in self.workouts:
-            self.list.add_widget(OneLineListItem(text = i.date))
+            new_list_litem = OneLineListItem(text = i.date, on_release = partial(self.show_workout, i))
+            self.list.add_widget(new_list_litem)
         
         self.add_widget(self.list)
-                
+        
+    def show_workout(self, workout, _):
+        self.manager.buffer_workout = workout
+        self.manager.current = 'show_workout'
+        self.manager.transition.direction = 'left'
+        self.manager.get_screen('show_workout').load_workout()
+        print('Showing workout: ', workout)
+                             
 class WindowManager(ScreenManager):
     screen_mngr = ObjectProperty(None)
     buffer_session = []
+    buffer_workout = []
     
 class App(MDApp):
 

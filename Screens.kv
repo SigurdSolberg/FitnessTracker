@@ -7,6 +7,8 @@ WindowManager:
     HistoryWindow:
     WorkoutHistoryWindow:
     ExerciseSessionWindow:
+    ShowWorkoutWindow:
+    ShowExerciseWindow:
 
 <HomeWindow>:
     name: 'home'
@@ -61,4 +63,23 @@ WindowManager:
             app.root.current = 'history'
             root.manager.transition.direction = 'right'
 
+<ShowWorkoutWindow>:
+    name: 'show_workout'
+
+    MDRectangleFlatButton:
+        text: 'Back'
+        pos_hint: {'center_x': 0.8, 'center_y': 0.9}
+        on_press: 
+            app.root.current = 'workout_history'
+            root.manager.transition.direction = 'right'
+
+<ShowexerciseWindow>:
+    name: 'show_exercise'
+
+    MDRectangleFlatButton:
+        text: 'Back'
+        pos_hint: {'center_x': 0.8, 'center_y': 0.9}
+        on_press: 
+            app.root.current = 'exercises'
+            root.manager.transition.direction = 'right'
 

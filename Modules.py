@@ -10,17 +10,17 @@ class Exercise():
     def __init__(self, name):
         self.name = name
 
-    def add_exercise_session():
+    def add_exercise_session(self):
         pass
 
-    def get_history():
+    def get_history(self):
         pass
-
-    def save(self):
         file_path = 'Data/' + self.name
-        with open(file_path, 'wb') as outp:  # Overwrites any existing file.
-            pickle.dump(self, outp, pickle.HIGHEST_PROTOCOL)
-
+        with open(file_path, 'rb') as outp:
+            try:
+                return pickle.load(outp)
+            except:
+                return []
 
 class ExerciseSession():
 
@@ -36,7 +36,21 @@ class ExerciseSession():
 
     def add_set(self, set):
         self.sets.append(set)
-
+        
+    def save(self):
+        history = self.load_exercise_history()
+        file_path = 'Data/Exercises/' + self.name
+        history.append(self)
+        with open(file_path, 'wb') as outp:  # Overwrites any existing file.
+            pickle.dump(history, outp, pickle.HIGHEST_PROTOCOL)
+        
+    def load_exercise_history(self):
+        file_path = 'Data/Exercises/' + self.name
+        try:
+            with open(file_path, 'rb') as outp:
+                return pickle.load(outp)
+        except:
+            return []
 
 class Workout():
 
@@ -54,10 +68,13 @@ class Workout():
     def save(self):
         file_path = 'Data/Workouts'
         workouts = self.load_workouts()
-        print(workouts)
         workouts.append(self)
         with open(file_path, 'wb') as outp:  # Overwrites any existing file.
             pickle.dump(workouts, outp, pickle.HIGHEST_PROTOCOL)
+            
+        # Save all exercises to their respective exercise-historyes as well...
+        for _, session in self.workout.items():
+            session.save()
 
     def load_workouts(self):
         with open('Data/Workouts', 'rb') as outp:
@@ -65,6 +82,7 @@ class Workout():
                 return pickle.load(outp)
             except:
                 return []
+
 class Set():
 
     """
