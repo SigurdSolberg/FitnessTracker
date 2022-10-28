@@ -1,16 +1,12 @@
-from gettext import translation
 from functools import partial
-from msilib.schema import Directory
-from kivy.uix.floatlayout import FloatLayout
 from kivymd.app import Builder, MDApp, ObjectProperty
 from kivymd.uix.label import MDLabel
 from kivymd.uix.screen import Screen
-from kivymd.uix.button import MDFloatingActionButton, MDRectangleFlatButton
+from kivymd.uix.button import  MDRectangleFlatButton
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.list import MDList, OneLineListItem
 from kivymd.uix.screenmanager import ScreenManager
-from Modules import Workout, Set, Exercise, ExerciseSession
-ScreenManager   
+from Modules import Workout, Set,  ExerciseSession
 import pickle
 import os
 
@@ -33,6 +29,18 @@ class ShowExerciseWindow(Screen):
     
     def __init__(self, **kw):
         super().__init__(**kw)
+        
+    def load_exercise(self):
+        try:
+            self.remove_widget(self.session_list)
+        except:
+            pass
+        self.session_list = MDList()
+        print('Buffer session: ', self.manager.buffer_exercise)
+        for session in self.manager.buffer_exercise:
+            print('Hello')
+            self.session_list.add_widget(OneLineListItem(text = f'{session.date}: {len(session.sets)} sets'))
+        self.add_widget(self.session_list)
 
 class HistoryWindow(Screen):
     
@@ -70,9 +78,17 @@ class ExercisesWindow(Screen):
         self.exercises = [self.load_exercise(name) for name in os.listdir('Data/Exercises/')]
         exercisesList = MDList(pos_hint = {'center_x': 0.5, 'center_y':0.75})
         for i in self.exercises:
-            exercisesList.add_widget(OneLineListItem(text = i[0].name))
+            exercisesList.add_widget(OneLineListItem(text = i[0].name, on_release = partial(self.show_exercise, i)))
         self.add_widget(exercisesList)
         
+    def show_exercise(self, exercise, _):
+        self.manager.buffer_exercise = exercise
+        self.manager.current = 'show_exercise'
+        self.manager.transition.direction = 'left'
+        self.manager.get_screen('show_exercise').load_exercise()
+        print('Showing workout: ', exercise)
+        
+    
     def load_exercise(self, name):
         with open('Data/Exercises/' + name, 'rb') as outp:
             try: 
@@ -218,6 +234,7 @@ class WindowManager(ScreenManager):
     screen_mngr = ObjectProperty(None)
     buffer_session = []
     buffer_workout = []
+    buffer_exercise = []
     
 class App(MDApp):
 

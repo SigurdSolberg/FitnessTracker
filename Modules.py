@@ -1,5 +1,5 @@
 import pickle
-from datetime import datetime, date
+from datetime import datetime
 
 class Exercise():
 
@@ -29,10 +29,12 @@ class ExerciseSession():
     """
 
     name: str
+    date: str
 
     def __init__(self, name):
         self.name = name
         self.sets = []
+        self.date = datetime.now().strftime('%B %d, %Y - %H:%M')     #Set date
 
     def add_set(self, set):
         self.sets.append(set)
